@@ -1,5 +1,5 @@
 require('dotenv').config();
-console.log("Loaded API Key:", process.env.OPENAI_API_KEY); // For testing only
+
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
@@ -7,9 +7,11 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+// Serve static files from the "public" folder
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
+// GPT chat route
 app.post('/chat', async (req, res) => {
   const userMessage = req.body.message;
 
@@ -31,4 +33,7 @@ app.post('/chat', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
