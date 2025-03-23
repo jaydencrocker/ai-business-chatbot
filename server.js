@@ -9,7 +9,12 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Optional, for static assets
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Health check route (required by uptime ping tools)
+app.get('/', (req, res) => {
+  res.send('✅ AI Business Chatbot server is running');
+});
 
 // Chatbot route
 app.post('/chat', async (req, res) => {
@@ -38,7 +43,6 @@ app.post('/chat', async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
