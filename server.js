@@ -3,20 +3,20 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
-
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Health check route (required by uptime ping tools)
+// Health check route for GET /
 app.get('/', (req, res) => {
   res.send('✅ AI Business Chatbot server is running');
 });
 
-// Chatbot route
+// Chat endpoint
 app.post('/chat', async (req, res) => {
   const userMessage = req.body.message;
 
@@ -37,12 +37,13 @@ app.post('/chat', async (req, res) => {
 
     const reply = response.data.choices[0].message.content;
     res.json({ reply });
-  } catch (error) {
-    console.error('Chatbot error:', error.response?.data || error.message);
-    res.status(500).json({ reply: 'Error processing your request.' });
+  } catch (err) {
+    console.error('Chat error:', err.response?.data || err.message);
+    res.status(500).json({ reply: 'Error: Failed to connect to OpenAI' });
   }
 });
 
+// Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
